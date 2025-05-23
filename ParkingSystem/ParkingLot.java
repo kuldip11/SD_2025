@@ -1,6 +1,5 @@
 package ParkingSystem;
 
-
 import PaymentStrategy.CreditCardPayment;
 import PaymentStrategy.DebitCardPayment;
 import PaymentStrategy.PayPalPayment;
@@ -11,6 +10,7 @@ import java.util.Scanner;
 import java.util.UUID;
 
 public class ParkingLot {
+
     private String name;
     private String address;
     private ArrayList<Floor> floors;
@@ -29,7 +29,7 @@ public class ParkingLot {
         floors.add(floor);
     }
 
-    public void showParkingLotDetails(){
+    public void showParkingLotDetails() {
         System.out.println("Name: " + name + " Address: " + address);
     }
 
@@ -50,30 +50,32 @@ public class ParkingLot {
 
     public Ticket leaveParking(int ticketId) {
         for (Ticket ticket : tickets) {
-            if(ticket.getTicketId() == ticketId){
+            if (ticket.getTicketId() == ticketId) {
                 double ammount = ticket.calculateAmount();
 
                 String paymentId = payParkingFee(ammount);
 
-                ticket.markExit(paymentId);
+                if (paymentId != null) {
 
-                for (Floor floor : floors) {
-                    for (Spot spot : floor.spots) {
-                        if (spot.getSpotId() == ticket.getParkingSpot()) {
-                            spot.leave();
-                            break;
+                    ticket.markExit(paymentId);
+
+                    for (Floor floor : floors) {
+                        for (Spot spot : floor.spots) {
+                            if (spot.getSpotId() == ticket.getParkingSpot()) {
+                                spot.leave();
+                            }
                         }
                     }
-                }
 
-                return ticket;
+                    return ticket;
+                }
             }
         }
-        
+
         return null;
     }
 
-    public String payParkingFee(double ammount){
+    public String payParkingFee(double ammount) {
         PaymentContext paymentContext = new PaymentContext();
         int paymentMethod = -1;
 
@@ -83,7 +85,6 @@ public class ParkingLot {
         System.out.println("1 - Paypal");
         System.out.println("2 - Credit Card");
         System.out.println("3 - Debit Card");
-
 
         paymentMethod = sc.nextInt();
 
