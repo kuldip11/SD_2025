@@ -102,6 +102,8 @@ public class ParkingLot {
                 return null;
         }
 
+        paymentContext.processPayment(ammount);
+
         return UUID.randomUUID().toString();
     }
 }
