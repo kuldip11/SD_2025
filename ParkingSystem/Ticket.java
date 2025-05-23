@@ -70,10 +70,11 @@ public class Ticket {
     }
 
     public void printTicket() {
-        System.out.println("Here is Your Ticket");
+        System.out.println("Your Ticket");
         System.out.println("Ticket Id: " + ticketId);
         System.out.println("Vehicle Number: " + vehicleNumber);
         System.out.println("Vehicle Type: " + vehicleType);
+        System.out.println("Payment Id: " + paymentId);
         System.out.println("Entry Time: " + entryTime);
         System.out.println("Exit Time: " + exitTime);
     }
