@@ -1,13 +1,22 @@
 package ParkingSystem;
 
+
+import PaymentStrategy.CreditCardPayment;
+import PaymentStrategy.DebitCardPayment;
+import PaymentStrategy.PayPalPayment;
+import PaymentStrategy.PaymentContext;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.UUID;
 
 public class ParkingLot {
     private String name;
     private String address;
     private ArrayList<Floor> floors;
     private ArrayList<Ticket> tickets;
+
+    static Scanner sc = new Scanner(System.in);
 
     ParkingLot(String name, String address) {
         this.name = name;
@@ -21,7 +30,7 @@ public class ParkingLot {
     }
 
     public void showParkingLotDetails(){
-        System.err.println("Name: " + name + " Address: " + address);
+        System.out.println("Name: " + name + " Address: " + address);
     }
 
     public Ticket getTicket(VehicleType vehicleType, String vehicleNumber) {
@@ -42,7 +51,11 @@ public class ParkingLot {
     public Ticket leaveParking(int ticketId) {
         for (Ticket ticket : tickets) {
             if(ticket.getTicketId() == ticketId){
-                ticket.markExit();
+                double ammount = ticket.calculateAmount();
+
+                String paymentId = payParkingFee(ammount);
+
+                ticket.markExit(paymentId);
 
                 for (Floor floor : floors) {
                     for (Spot spot : floor.spots) {
@@ -58,5 +71,37 @@ public class ParkingLot {
         }
         
         return null;
+    }
+
+    public String payParkingFee(double ammount){
+        PaymentContext paymentContext = new PaymentContext();
+        int paymentMethod = -1;
+
+        System.out.println("Your Parking Fee: " + ammount + "$");
+        System.out.println("Select Payment ethod");
+
+        System.out.println("1 - Paypal");
+        System.out.println("2 - Credit Card");
+        System.out.println("3 - Debit Card");
+
+
+        paymentMethod = sc.nextInt();
+
+        switch (paymentMethod) {
+            case 1:
+                paymentContext.setPaymentStrategy(new PayPalPayment());
+                break;
+            case 2:
+                paymentContext.setPaymentStrategy(new CreditCardPayment());
+                break;
+            case 3:
+                paymentContext.setPaymentStrategy(new DebitCardPayment());
+                break;
+            default:
+                System.out.println("Opps something went wrong");
+                return null;
+        }
+
+        return UUID.randomUUID().toString();
     }
 }

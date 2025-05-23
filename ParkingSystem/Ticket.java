@@ -1,5 +1,6 @@
 package ParkingSystem;
 
+import PaymentStrategy.PaymentStrategy;
 import java.time.LocalDateTime;
 
 public class Ticket {
@@ -8,6 +9,7 @@ public class Ticket {
     private int parkingSpot;
     private String vehicleNumber;
     private VehicleType vehicleType;
+    private String paymentId;
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
 
@@ -19,9 +21,37 @@ public class Ticket {
         this.entryTime = entryTime;
     }
 
-    public void markExit() {
+    public void markExit(String paymentId) {
+        this.paymentId = paymentId;
         this.exitTime = LocalDateTime.now();
     }
+
+    public double calculateAmount() {
+        long durationInHours = java.time.Duration.between(this.entryTime, LocalDateTime.now()).toHours();
+
+        if (durationInHours <= 0) durationInHours = 1;
+
+        double amount = 0;
+        long remaining = durationInHours;
+
+        long firstTier = Math.min(remaining, 3);
+        amount += firstTier * 10;
+        remaining -= firstTier;
+
+        long secondTier = Math.min(remaining, 2);
+        amount += secondTier * 5;
+        remaining -= secondTier;
+
+        amount += remaining * 2;
+
+        return amount;
+    }
+
+    public void pay(PaymentStrategy paymentStrategy){
+        double ammount = this.calculateAmount();
+        paymentStrategy.pay(ammount);
+    }
+
 
     public int getTicketId() {
         return ticketId;
@@ -40,12 +70,12 @@ public class Ticket {
     }
 
     public void printTicket() {
-        System.err.println("Here is Your Ticket");
-        System.err.println("Ticket Id: " + ticketId);
-        System.err.println("Vehicle Number: " + vehicleNumber);
-        System.err.println("Vehicle Type: " + vehicleType);
-        System.err.println("Entry Time: " + entryTime);
-        System.err.println("Exit Time: " + exitTime);
+        System.out.println("Here is Your Ticket");
+        System.out.println("Ticket Id: " + ticketId);
+        System.out.println("Vehicle Number: " + vehicleNumber);
+        System.out.println("Vehicle Type: " + vehicleType);
+        System.out.println("Entry Time: " + entryTime);
+        System.out.println("Exit Time: " + exitTime);
     }
 
 }

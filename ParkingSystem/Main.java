@@ -11,14 +11,14 @@ public class Main {
         
         Scanner sc = new Scanner(System.in);
         
-        System.err.println("Enter Parkinglot Name");
+        System.out.println("Enter Parkinglot Name");
         parkingName = sc.nextLine();
-        System.err.println("Enter Parkinglot Address");
+        System.out.println("Enter Parkinglot Address");
         parkingAddress = sc.nextLine();
 
         ParkingLot rustumjeeParkingLot = new ParkingLot(parkingName, parkingAddress);
 
-        System.err.println("Enter total floor " + parkingName + " have?");
+        System.out.println("Enter total floor " + parkingName + " have?");
         int numFloors = sc.nextInt();
         
         for (int i = 1; i <= numFloors; i++) {
@@ -52,7 +52,7 @@ public class Main {
 
 
         while(true){
-            System.err.println("Enty or Exit - (0/1)");
+            System.out.println("Enty or Exit - (0/1)");
             int task = sc.nextInt();
 
             if(task == 0){
@@ -62,13 +62,13 @@ public class Main {
 
                 VehicleType vehicleType = VehicleType.valueOf(vehicleTypes[inputVehecleType]);
 
-                System.err.println("Enter Vehicle Number");
+                System.out.println("Enter Vehicle Number");
                 String vehicleNumber = sc.nextLine();
 
                 Ticket ticket = rustumjeeParkingLot.getTicket(vehicleType, vehicleNumber);
 
                 if(ticket == null){
-                    System.err.println("Sorry Spots is Not Available");
+                    System.out.println("Sorry Spots is Not Available");
                 }else{
                     ticket.printTicket();
                 }
